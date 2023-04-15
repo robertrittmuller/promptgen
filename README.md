@@ -25,7 +25,7 @@ The script accepts the following command line arguments:
 
 The script requires two input files:
 
-1. `templates.csv`: A CSV file containing the prompt templates. Each row in the file represents a template with two columns: the template name and the template content. The template name will be enclosed in curly braces `{}` in the prompts and will be replaced with the template content when generating the final prompts. Please note that this updated implementation expects the templates in templates.csv to be in the format `{template_name},template_content`, so that the template names can be directly used in the format function. 
+1. `templates.csv`: A CSV file containing the prompt templates. Each row in the file represents a template with two columns: the template name and the template content. The template name will be enclosed in curly braces `{}` in the prompts and will be replaced with the template content when generating the final prompts. Please note that this implementation expects the templates in templates.csv to be in the format `{template_name},template_content`, so that the template names can be directly used in the format function. 
 
 2. `prompts.txt`: A plain text file containing the prompts. Each line in the file represents a prompt. The script will read the prompts and use the templates to generate multiple variations of each prompt.
 

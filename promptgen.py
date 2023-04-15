@@ -55,4 +55,4 @@ for each_prompt in prompts:
         for samp in args.samplers:
             for cg in args.cfg:
                 for res in args.base_resolutions:
-                    print(f' {final_prompt} -A{samp} -C{cg} {res} {args.base_settings}')   
+                    print(f'{final_prompt} -A{samp} -C{cg} {res} {args.base_settings}')   
