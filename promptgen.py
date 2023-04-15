@@ -1,6 +1,7 @@
 import re
 import csv
 import random
+import argparse
 
 # default filenames/paths
 template_path = "templates.csv"
@@ -13,45 +14,45 @@ base_settings = '-n 3 -s 150 -U 4 --hires_fix'
 samplers = ['k_heun']
 cfg = [7.5,8.5,9.5]
 
-# read in the prompt templates
-templates = []
-with open(template_path, newline='') as csvfile:
+# command line arguments
+parser = argparse.ArgumentParser(description="Command line parameters for your script.")
+parser.add_argument("--template_path", default=template_path, help="Path to the templates.csv file.")
+parser.add_argument("--prompt_path", default=prompt_path, help="Path to the prompts.txt file.")
+parser.add_argument("--number_of_sets", type=int, default=number_of_sets, help="Number of sets.")
+parser.add_argument("--base_resolutions", nargs='+', default=base_resolutions, help="Base resolutions.")
+parser.add_argument("--base_settings", default=base_settings, help="Base settings.")
+parser.add_argument("--samplers", nargs='+', default=samplers, help="List of samplers.")
+parser.add_argument("--cfg", nargs='+', type=float, default=cfg, help="Configuration values.")
+
+args = parser.parse_args()
+
+# Read in the prompt templates and create a dictionary to map template names to content
+templates = {}
+with open(args.template_path, newline='') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_ALL, skipinitialspace=True)
     for row in csvreader:
-        templates.append(row)
+        templates[row[0]] = row[1]
 
-# read in the prompts
+# Read in the prompts
 prompts = []
-with open(prompt_path, newline='') as promptfile:
+with open(args.prompt_path, newline='') as promptfile:
     for row in promptfile:
         prompts.append(row.strip())
 
-# process each prompt for any templates
+# Process each prompt for any templates
 for each_prompt in prompts:
-    for i in range(number_of_sets):
-        final_prompt = each_prompt
-        for each_template in templates:
-            search_text = '{' + each_template[0] + '}'
-            final_prompt = final_prompt.replace(search_text, each_template[1])
+    for i in range(args.number_of_sets):
+        # Replace templates using the dictionary
+        final_prompt = each_prompt.format(**templates)
         
-        # now we need to generate all of the varients if there are any wildcard blocks
+        # Handle wildcard blocks
         wildcard_blocks = re.findall(r'\(.*?\)', final_prompt)
+        for block in wildcard_blocks:
+            choices = block.strip('()').split('|')
+            final_prompt = final_prompt.replace(block, random.choice(choices).strip())
         
-        for each_wildcard_block in wildcard_blocks:
-            # decompose each block down to individual elements based on the pipe | delimiter
-            this_wildcard_block = each_wildcard_block.replace('(', '')
-            this_wildcard_block = this_wildcard_block.replace(')', '')
-            block_elements = this_wildcard_block.split('|')
-            
-            # choose one random element to use for this prompt
-            this_element = random.choice(block_elements)
-
-            # drop in the selected element
-            final_prompt = final_prompt.replace(each_wildcard_block, this_element.strip())
-        
-        # now render the final prompt with options
-        for samp in samplers:
-            for cg in cfg:
-                for res in base_resolutions:
-                    print(f' {final_prompt} -A{samp} -C{cg} {res} {base_settings}')
-    
+        # Render final prompt with options
+        for samp in args.samplers:
+            for cg in args.cfg:
+                for res in args.base_resolutions:
+                    print(f' {final_prompt} -A{samp} -C{cg} {res} {args.base_settings}')   
