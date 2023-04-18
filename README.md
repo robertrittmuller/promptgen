@@ -1,5 +1,5 @@
 # InvokeAI Automated Prompt Generation
-Automated prompt generation for Stable Diffusion. Focused on integration with InvokeAI.
+Automated prompt generation for Stable Diffusion. Focused on integration with <a href="https://github.com/invoke-ai/InvokeAI">InvokeAI</a>.
 
 ## Overview
 
