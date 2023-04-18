@@ -3,7 +3,7 @@ Automated prompt generation for Stable Diffusion. Focused on integration with <a
 
 ## Overview
 
-The purpose of the `promptgen.py` script generates multiple variations of prompts with specific options. The generated prompts can then be passed to the InvokeAI `invoke.py` script to automate the execution of these prompts. This guide provides instructions on how to use the promptgen.py script with InvokeAI.
+The purpose of the `promptgen.py` script is to generate multiple variations of Stable Diffusion prompts with specific options. The generated prompts can then be passed to the InvokeAI `invoke.py` script to automate the execution of these prompts. This guide provides instructions on how to use the promptgen.py script with InvokeAI.
 
 It reads prompt templates and prompts from separate input files (`templates.csv` and `prompts.txt`), and then generates different combinations of prompts based on the templates and options specified. The script allows users to customize the number of sets, base resolutions, base settings, samplers, and configuration values.
 
